@@ -197,6 +197,14 @@ endfunction
 function! s:append_tweets(tweets, cache)
   let separator = tweetvim#util#separator('-')
   for tweet in a:tweets
+    " skip tweets listed in g:tweetvim_ng_list
+    if exists('g:tweetvim_ng_list')
+      for word in g:tweetvim_ng_list
+        if tweet.text =~ word
+          return
+        endif
+      endfor
+    endif
     " cache tweet by line no
     let a:cache[line(".")] = tweet
     call append(line('$') - 1, s:format(tweet))
